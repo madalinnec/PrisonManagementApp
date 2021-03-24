@@ -3,8 +3,7 @@ package entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Scanner;
 
 @Setter
 @Getter
@@ -16,9 +15,6 @@ import java.util.Set;
 @Table (name = "prison")
 
 public class Prison {
-
-    @ManyToMany(mappedBy = "prisons")
-    public Set<Administrator> administrators = new HashSet<>();
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,11 +29,25 @@ public class Prison {
     @Column (name = "capacity", nullable = false)
     public int capacity;
 
-//    @Column (name = "adminusername", nullable = false)
-    public String adminUsername;
+    @ManyToOne(targetEntity = Administrator.class)
+    @JoinColumn(name = "idAdministrator")
+    public int idAdministrator;
 
-//    public Prison createNewPrison(){
-//
-//    }
-
+    public Prison insertNewPrisonDetails(){
+        Prison prison = new Prison();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Insert prison name: ");
+        String name = scanner.next();
+        prison.setName(name);
+        System.out.println("Insert prison security level (1/2/3): ");
+        int securityLevel = scanner.nextInt();
+        prison.setSecurityLevel(securityLevel);
+        System.out.println("Insert prison capacity: ");
+        int capacity = scanner.nextInt();
+        prison.setCapacity(capacity);
+        System.out.println("Insert prison's administrator ID: ");
+        int idAdministrator = scanner.nextInt();
+        prison.setIdAdministrator(idAdministrator);
+        return prison;
+    }
 }
