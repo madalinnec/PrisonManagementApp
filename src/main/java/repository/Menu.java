@@ -20,6 +20,7 @@ public class Menu {
     }
 
     public static void options(int option) {
+        TableManagement tableManagement = new TableManagement();
         Scanner scanner = new Scanner(System.in);
 
         if (option == 0) {
@@ -28,7 +29,8 @@ public class Menu {
             System.out.println("2.Manage prisoners");
             System.out.println("3.Statistics");
             System.out.println("4.Inbox");
-            System.out.println("5.Log out");
+            System.out.println("5. Create tables (USE ONLY ON FIRST RUN!)");
+            System.out.println("6.Log out");
             option = scanner.nextInt();
 
         }
@@ -44,9 +46,12 @@ public class Menu {
                     System.out.println("4.Back");
                     int option2 = scanner.nextInt();
                     if (option2 == 1) {
-                        System.out.println("Prisoner registered successful");
+                        tableManagement.addPrisonerToDatabase();
+                        System.out.println("Prisoner registered successfully");
                         validOption = true;
                     } else if (option2 == 2) {
+                        tableManagement.removePrisonerFromDatabase();
+                        System.out.println("Prisoner released successfully");
                         //release prisoner
                         validOption = true;
                     } else if (option2 == 3) {
@@ -142,9 +147,12 @@ public class Menu {
                 }
 
             case 5:
+                tableManagement.createTables();
+                System.out.println("Tables are now created");
+
+            case 6:
                 System.out.println("Log Out successful");
                 break;
-
 
         }
     }

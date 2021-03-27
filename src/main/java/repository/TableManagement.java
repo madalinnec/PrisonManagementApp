@@ -27,7 +27,7 @@ public class TableManagement {
         entityManager.close();
     }
 
-    public void addAdministratorToDatabase() {
+    public void addAdministratorToDatabase() {// de refactorizat pentru a folosi o singura metoda pentru toate entitatile
         Administrator administrator = new Administrator();
         administrator = administrator.insertNewAdministratorDetails();
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -93,7 +93,7 @@ public class TableManagement {
         entityManager.close();
     }
 
-    public Administrator returnAdministratorById(int id){
+    public Administrator returnAdministratorById(int id){ //de unit cu returnPrisonByID
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         //query ca sa gasesc administratorul dupa ID si sa il asignez la prison
@@ -115,11 +115,6 @@ public class TableManagement {
 
     public List<Administrator> returnAdminList(){
         List<Administrator> adminList = entityManager.createQuery("select c from Administrator c", Administrator.class).getResultList();
-//        for(Administrator administrator : adminList){
-//            System.out.println(administrator);
-//            System.out.println(administrator.getEmail());
-//            System.out.println(administrator.getPassword());
-//        }
         return adminList;
     }
 }
