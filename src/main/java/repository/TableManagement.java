@@ -1,3 +1,5 @@
+package repository;
+
 import entities.Administrator;
 import entities.Prison;
 import entities.Prisoner;
@@ -5,6 +7,7 @@ import entities.Prisoner;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.List;
 import java.util.Scanner;
 
 public class TableManagement {
@@ -15,6 +18,7 @@ public class TableManagement {
     static {
         entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
     }
+    EntityManager entityManager = entityManagerFactory.createEntityManager();
 
     public void createTables(){
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -89,4 +93,33 @@ public class TableManagement {
         entityManager.close();
     }
 
+    public Administrator returnAdministratorById(int id){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        //query ca sa gasesc administratorul dupa ID si sa il asignez la prison
+        Administrator administrator = (Administrator) entityManager.createNamedQuery("returnAdministratorById").setParameter("idAdministrator",id).getSingleResult();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return administrator;
+    }
+
+    public Prison returnPrisonById(int id){
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
+        //query ca sa gasesc prison dupa ID si sa il asignez la prisoner
+        Prison prison = (Prison) entityManager.createNamedQuery("returnPrisonById").setParameter("idPrison",id).getSingleResult();
+        entityManager.getTransaction().commit();
+        entityManager.close();
+        return prison;
+    }
+
+    public List<Administrator> returnAdminList(){
+        List<Administrator> adminList = entityManager.createQuery("select c from Administrator c", Administrator.class).getResultList();
+//        for(Administrator administrator : adminList){
+//            System.out.println(administrator);
+//            System.out.println(administrator.getEmail());
+//            System.out.println(administrator.getPassword());
+//        }
+        return adminList;
+    }
 }

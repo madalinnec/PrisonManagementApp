@@ -1,6 +1,7 @@
 package entities;
 
 import lombok.*;
+import repository.TableManagement;
 
 import javax.persistence.*;
 import java.util.Scanner;
@@ -19,29 +20,30 @@ public class Prisoner {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public long idPrisoner;
+    private long idPrisoner;
 
     @Column(name = "firstname", nullable = false)
-    public String firstName;
+    private String firstName;
 
     @Column(name = "lastname", nullable = false)
-    public String lastName;
+    private String lastName;
 
     @Column(name = "securitylevel", nullable = false)
-    public int securityLevel;
+    private int securityLevel;
 
     @Column(name = "entrydate", nullable = false)
-    public String entryDate;
+    private String entryDate;
 
     @Column(name = "releasedate", nullable = false)
-    public String releaseDate;
+    private String releaseDate;
 
     @ManyToOne(targetEntity = Prison.class)
-    @JoinColumn(name = "idprison")
-    public int idPrison;
+    @JoinColumn(name = "idPrison")
+    @ToString.Exclude
+    private Prison prison;
 
     @Column(name = "reason", nullable = false)
-    public String reason;
+    private String reason;
 
     public Prisoner insertNewPrisonerDetails() {
         Prisoner prisoner = new Prisoner();
@@ -63,7 +65,7 @@ public class Prisoner {
         prisoner.setReleaseDate(releaseDate);
         System.out.println("Insert the ID for the prison the prisoner should be assigned to: ");
         int idPrison = scanner.nextInt();
-        prisoner.setIdPrison(idPrison);
+        prisoner.prison = new TableManagement().returnPrisonById(idPrison);
         System.out.println("Insert reason for incarceration: ");
         String reason = scanner.next();
         prisoner.setReason(reason);

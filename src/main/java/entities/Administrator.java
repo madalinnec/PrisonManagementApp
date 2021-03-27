@@ -3,6 +3,7 @@ package entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -12,6 +13,11 @@ import java.util.Scanner;
 @AllArgsConstructor
 @ToString
 
+@NamedQueries({
+        @NamedQuery(name = "returnAdministratorById", query = "select a from Administrator a" +
+                " where idAdministrator = :idAdministrator")
+})
+
 @Entity
 @Table(name = "administrator")
 
@@ -19,22 +25,26 @@ public class Administrator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int idAdministrator;
+    private int idAdministrator;
 
     @Column(name = "cnp", nullable = false, unique = true)
-    public String CNP;
+    private String CNP;
 
     @Column(name = "firstname", nullable = false)
-    public String firstName;
+    private String firstName;
 
     @Column(name = "lastname", nullable = false)
-    public String lastName;
+    private String lastName;
 
     @Column(name = "password", nullable = false)
-    public String password;
+    private String password;
 
     @Column(name = "email", nullable = false, unique = true)
-    public String email;
+    private String email;
+
+    @OneToMany(mappedBy = "administrator", cascade = CascadeType.ALL,fetch = FetchType.EAGER) //.ALL sterge tot ce este legat de Admin, .PERSIST nu sterge
+    private List<Prison> prisonsList;
+
 
     public Administrator insertNewAdministratorDetails() {
         Administrator administrator = new Administrator();
@@ -56,5 +66,7 @@ public class Administrator {
         administrator.setEmail(email);
         return administrator;
     }
+
+
 }
 

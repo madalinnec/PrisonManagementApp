@@ -3,13 +3,20 @@ package entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Scanner;
+import repository.TableManagement;
 
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+
+@NamedQueries({
+        @NamedQuery(name = "returnPrisonById", query = "select a from Prison a" +
+                " where idPrison = :idPrison")
+})
 
 @Entity
 @Table (name = "prison")
@@ -18,20 +25,24 @@ public class Prison {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int idPrison;
+    private int idPrison;
 
     @Column(name = "name", unique = true, nullable = false)
-    public String name;
+    private String name;
 
     @Column (name = "securitylevel", nullable = false)
-    public int securityLevel;
+    private int securityLevel;
 
     @Column (name = "capacity", nullable = false)
-    public int capacity;
+    private int capacity;
 
     @ManyToOne(targetEntity = Administrator.class)
-    @JoinColumn(name = "idAdministrator")
-    public int idAdministrator;
+    @JoinColumn(name = "idadministrator")
+    @ToString.Exclude //sa nu repete toString la infinit
+    private Administrator administrator;
+
+    @OneToMany(mappedBy = "prison", cascade = CascadeType.ALL,fetch = FetchType.EAGER) //.ALL sterge tot ce este legat de Admin, .PERSIST nu sterge
+    private List<Prisoner> prisonersList;
 
     public Prison insertNewPrisonDetails(){
         Prison prison = new Prison();
@@ -47,7 +58,9 @@ public class Prison {
         prison.setCapacity(capacity);
         System.out.println("Insert prison's administrator ID: ");
         int idAdministrator = scanner.nextInt();
-        prison.setIdAdministrator(idAdministrator);
+        prison.administrator = new TableManagement().returnAdministratorById(idAdministrator);
         return prison;
     }
+
+
 }
